@@ -1,11 +1,11 @@
 Config = {
-    blip = true, -- Affichage du blip (true = oui, false = non)
+    BlipBurgershot = true, -- Affichage du blip (true = oui, false = non)
 
     BlipBurgershotName = 'Burgershot', -- Nom du blip
-    BlipId = 52, -- Id du blip voir: https://wiki.gtanet.work/index.php?title=Blips
-    BlipTaille = 0.7, -- Taille du blip
-    BlipCouleur = 2, -- Couleur du blip voir: https://wiki.gtanet.work/index.php?title=Blips
-    BlipRange = true, -- Garder le blip sur la map (true = désactiver, false = activé)
+    BlipBurgershotId = 106, -- Id du blip voir: https://wiki.gtanet.work/index.php?title=Blips
+    BlipBurgershotTaille = 0.7, -- Taille du blip
+    BlipBurgershotCouleur = 47, -- Couleur du blip voir: https://wiki.gtanet.work/index.php?title=Blips
+    BlipBurgershotRange = true, -- Garder le blip sur la map (true = désactiver, false = activé)
 
     MarkerType = 21, -- Pour voir les différents type de marker: https://docs.fivem.net/docs/game-references/markers/
     MarkerSizeLargeur = 0.7, -- Largeur du marker
@@ -58,6 +58,7 @@ Config = {
         Boisson = {vector3(-1198.51, -894.86, 13.99)},
         Boss = {vector3(-1192.07, -897.88, 13.99)},
         Garage = {vector3(-1176.81, -890.68, 13.8)},
+        Blip = {vector3(-1185.47, -885.45, 16.03)},
     }
 
 }
