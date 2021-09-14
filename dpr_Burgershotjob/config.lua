@@ -1,6 +1,7 @@
 Config = {
     blip = true, -- Affichage du blip (true = oui, false = non)
 
+    BlipBurgershotName = 'Burgershot', -- Nom du blip
     BlipId = 52, -- Id du blip voir: https://wiki.gtanet.work/index.php?title=Blips
     BlipTaille = 0.7, -- Taille du blip
     BlipCouleur = 2, -- Couleur du blip voir: https://wiki.gtanet.work/index.php?title=Blips
