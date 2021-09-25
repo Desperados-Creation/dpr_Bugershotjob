@@ -1,3 +1,20 @@
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+local PlayerData = {}
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+     PlayerData = xPlayer
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)  
+	PlayerData.job = job  
+	Citizen.Wait(5000) 
+end)
+
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -22,115 +39,75 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
-    RefreshburgershotMoney()
 end)
 
 -- MENU FUNCTION --
-
 local open = false 
-local mainMenu = RageUI.CreateMenu('Boss Action', 'interaction')
-mainMenu.Display.Header = true 
-mainMenu.Closed = function()
+local MenuBossBurgershot = RageUI.CreateMenu('Boss Action', 'interaction')
+MenuBossBurgershot.Display.Header = true 
+MenuBossBurgershot.Closed = function()
   open = false
 end
 
 function OpenMenuBossburgershot()
 	if open then 
 		open = false
-		RageUI.Visible(mainMenu, false)
+		RageUI.Visible(MenuBossBurgershot, false)
 		return
 	else
 		open = true 
-		RageUI.Visible(mainMenu, true)
+		RageUI.Visible(MenuBossBurgershot, true)
 		CreateThread(function()
 		while open do 
-		   RageUI.IsVisible(mainMenu,function() 
+		   RageUI.IsVisible(MenuBossBurgershot,function()
+                RageUI.Separator("↓     ~y~Gestion de l'entreprise     ~s~↓")
+                RageUI.Button("Retirer argent de société", nil, {RightLabel = "~y~→→"}, true , {
+                    onSelected = function()
+                        local amount = KeyboardInput("Montant", "", 10)
+                            amount = tonumber(amount)
+                            if amount == nil then
+                                RageUI.Popup({message = "Montant invalide"})
+                            else
+                                TriggerServerEvent('esx_society:withdrawMoney', 'burgershot', amount)
+                            end
+                    end
+                })
 
+                RageUI.Button("Déposer argent de société", nil, {RightLabel = "~y~→→"}, true , {
+                    onSelected = function()
+                        local amount = KeyboardInput("Montant", "", 10)
+                            amount = tonumber(amount)
+                            if amount == nil then
+                                RageUI.Popup({message = "Montant invalide"})
+                            else
+                                TriggerServerEvent('esx_society:depositMoney', 'burgershot', amount)
+                            end
+                    end
+                })
 
-            RageUI.Separator("↓     ~y~Gestion de l'entreprise     ~s~↓")
-			RageUI.Button("Retirer argent de société", nil, {RightLabel = "→"}, true , {
-				onSelected = function()
-                    ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. 'burgershot',
-                    {
-                        title = ('Montant')
-                    }, function(data, menu)
-                    local amount = tonumber(data.value)
-
-                if amount == nil then
-                    ESX.ShowNotification('Montant invalide')
-                else
-                    menu.close()
-                    TriggerServerEvent('esx_society:withdrawMoney', 'burgershot', amount)
-                        end
-                    end)
-				end
-			})
-
-			 RageUI.Button("Déposer argent de société", nil, {RightLabel = "→"}, true , {
-				onSelected = function()
-                    ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'deposit_money_amount_' .. 'burgershot',
-                    {
-                        title = ('Montant')
-                    }, function(data, menu)
-        
-                        local amount = tonumber(data.value)
-        
-                        if amount == nil then
-                            ESX.ShowNotification('Montant invalide')
-                        else
-                            menu.close()
-                            TriggerServerEvent('esx_society:depositMoney', 'burgershot', amount)
-                        end
-                    end)
-				end
-			 })
-
-		   end)
-		 Wait(0)
-		end
-	 end)
-  end
-end
-
-
-function RefreshburgershotMoney()
-    if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade_name == 'boss' then
-        ESX.TriggerServerCallback('esx_society:getSocietyMoney', function(money)
-            UpdateSocietyburgershotMoney(money)
-        end, ESX.PlayerData.job.name)
+                RageUI.Button("Gestion Entreprise", nil, {RightLabel = "~y~→→→"}, true , {
+                    onSelected = function()
+                        aboss()
+                        RageUI.CloseAll()
+                    end
+                })
+                end)
+		    Wait(0)
+		    end
+	    end)
     end
 end
 
-function UpdateSocietyburgershotMoney(money)
-    societyburgershotmoney = ESX.Math.GroupDigits(money)
-end
-
-function KeyboardInput(TextEntry, ExampleText, MaxStringLength)
-
-	AddTextEntry('FMMC_KEY_TIP1', TextEntry .. ':')
-	DisplayOnscreenKeyboard(1, "FMMC_KEY_TIP1", "", ExampleText, "", "", "", MaxStringLength)
-	blockinput = true
-
-	while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-		Citizen.Wait(0)
-	end
-
-	if UpdateOnscreenKeyboard() ~= 2 then
-		local result = GetOnscreenKeyboardResult()
-		Citizen.Wait(500)
-		blockinput = false
-		return result
-	else
-		Citizen.Wait(500)
-		blockinput = false
-		return nil
-	end
+function aboss()
+    TriggerEvent('esx_society:openBossMenu', 'burgershot', function(data, menu)
+        menu.close()
+    end, {wash = false})
 end
 
 Citizen.CreateThread(function()
     while true do
         local wait = 750
-        if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.grade_name == 'boss' then
+        if ESX.PlayerData.job and ESX.PlayerData.job.name == 'burgershot' and ESX.PlayerData.job.grade_name == 'boss' then
             for k in pairs(Config.Position.Boss) do
                 local plyCoords = GetEntityCoords(GetPlayerPed(-1), false)
                 local pos = Config.Position.Boss
