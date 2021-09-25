@@ -1,6 +1,6 @@
-ESX = nil
-
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+TriggerEvent('esx_phone:registerNumber', 'burgershot', ('burgershot'), true, true)
+TriggerEvent('esx_society:registerSociety', 'burgershot', 'burgershot', 'society_burgershot', 'society_burgershot', 'society_burgershot', {type = 'private'})
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -8,42 +8,42 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 -- Gestion annonce
-RegisterServerEvent('dpr_burgershotJob:AnnonceOuverture')
-AddEventHandler('dpr_burgershotJob:AnnonceOuverture', function()
-	local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
+RegisterServerEvent('dpr_BurgershotJob:AnnonceOuverture')
+AddEventHandler('dpr_BurgershotJob:AnnonceOuverture', function()
+	local _src = source
+    local xPlayer = ESX.GetPlayerFromId(_src)
     local xPlayers = ESX.GetPlayers()
     for i=1, #xPlayers, 1 do
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'burgershot', '~y~Annonce', 'Le cabinet burgershot est désormais ~g~ouvert ~s~!', 'CHAR_ESTATE_AGENT', 1)
+		TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'Burgershot', '~y~Annonce', 'Le cabinet burgershot est désormais ~g~ouvert ~s~!', 'CHAR_ESTATE_AGENT', 1)
     end
 end)
 
-RegisterServerEvent('dpr_burgershotJob:AnnonceFermeture')
-AddEventHandler('dpr_burgershotJob:AnnonceFermeture', function()
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
+RegisterServerEvent('dpr_BurgershotJob:AnnonceFermeture')
+AddEventHandler('dpr_BurgershotJob:AnnonceFermeture', function()
+    local _src = source
+    local xPlayer = ESX.GetPlayerFromId(_src)
     local xPlayers = ESX.GetPlayers()
     for i=1, #xPlayers, 1 do 
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'burgershot', '~y~Annonce', 'Le cabinet burgershot est désormais ~r~fermer ~s~!', 'CHAR_ESTATE_AGENT', 1)
+		TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'Burgershot', '~y~Annonce', 'Le cabinet burgershot est désormais ~r~fermer ~s~!', 'CHAR_ESTATE_AGENT', 1)
     end
 end)
 
-RegisterServerEvent('dpr_burgershotJob:AnnonceRecrutement')
-AddEventHandler('dpr_burgershotJob:AnnonceRecrutement', function()
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
+RegisterServerEvent('dpr_BurgershotJob:AnnonceRecrutement')
+AddEventHandler('dpr_BurgershotJob:AnnonceRecrutement', function()
+    local _src = source
+    local xPlayer = ESX.GetPlayerFromId(_src)
     local xPlayers = ESX.GetPlayers()
     for i=1, #xPlayers, 1 do 
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'burgershot', '~y~Annonce', 'Le cabinet burgershot ~y~recrute ~s~rendez-vous dans nos bureau ~y~pour plus d\'information ~s~!', 'CHAR_ESTATE_AGENT', 1)
+		TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'Burgershot', '~y~Annonce', 'Le cabinet burgershot ~y~recrute ~s~rendez-vous dans nos bureau ~y~pour plus d\'information ~s~!', 'CHAR_ESTATE_AGENT', 1)
     end
 end)
 
 RegisterCommand('burgershot', function(source, args, rawCommand)
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
+    local _src = source
+    local xPlayer = ESX.GetPlayerFromId(_src)
     if xPlayer.job.name == "burgershot" then
         local src = source
         local msg = rawCommand:sub(11)
@@ -51,40 +51,47 @@ RegisterCommand('burgershot', function(source, args, rawCommand)
         if player ~= false then
             local name = GetPlayerName(source)
             local xPlayers	= ESX.GetPlayers()
-        for i=1, #xPlayers, 1 do
-            local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-            TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'burgershot', '~y~Annonce', ''..msg..'', 'CHAR_ESTATE_AGENT', 1)
+            for i=1, #xPlayers, 1 do
+                local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+                TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'burgershot', '~y~Annonce', ''..msg..'', 'CHAR_ESTATE_AGENT', 1)
+            end
+        else
+            TriggerClientEvent('esx:showAdvancedNotification', _src, 'burgershot', '~r~Erreur' , '~y~Tu n\'es pas membre de cette entreprise pour faire cette commande', 'CHAR_ESTATE_AGENT', 1)
         end
     else
-        TriggerClientEvent('esx:showAdvancedNotification', _source, 'burgershot', '~r~Erreur' , '~y~Tu n\'es pas membre de cette entreprise pour faire cette commande', 'CHAR_ESTATE_AGENT', 1)
+        TriggerClientEvent('esx:showAdvancedNotification', _src, 'burgershot', '~r~Erreur' , '~y~Tu n\'es pas membre de cette entreprise pour faire cette commande', 'CHAR_ESTATE_AGENT', 1)
     end
-    else
-        TriggerClientEvent('esx:showAdvancedNotification', _source, 'burgershot', '~r~Erreur' , '~y~Tu n\'es pas membre de cette entreprise pour faire cette commande', 'CHAR_ESTATE_AGENT', 1)
-    end
-end, false)
+end)
 
-RegisterServerEvent('dpr_burgershotJob:MessageEmployer')
-AddEventHandler('dpr_burgershotJob:MessageEmployer', function(PriseOuFin, message)
-    local _source = source
-    local _raison = PriseOuFin
-    local xPlayer = ESX.GetPlayerFromId(_source)
-    local xPlayers = ESX.GetPlayers()
-    local name = xPlayer.getName(_source)
-
-
-    for i = 1, #xPlayers, 1 do
-        local thePlayer = ESX.GetPlayerFromId(xPlayers[i])
-        if thePlayer.job.name == 'burgershot' then
-            TriggerClientEvent('dpr_burgershotJob:MessageEmployer', xPlayers[i], _raison, name, message)
+RegisterCommand('eburgershot', function(source, args, rawCommand)
+    local _src = source
+    local xPlayer = ESX.GetPlayerFromId(_src)
+    if xPlayer.job.name == "burgershot" then
+        local src = source
+        local msg = rawCommand:sub(12)
+        local args = msg
+        if player ~= false then
+            local name = GetPlayerName(source)
+            local xPlayers	= ESX.GetPlayers()
+            for i=1, #xPlayers, 1 do
+                local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+                if xPlayer.job.name == 'burgershot' then
+                    TriggerClientEvent('esx:showAdvancedNotification', xPlayers[i], 'burgershot', '~y~Annonce', ''..msg..'', 'CHAR_ESTATE_AGENT', 1)
+                end
+            end
+        else
+            TriggerClientEvent('esx:showAdvancedNotification', _src, 'burgershot', '~r~Erreur' , '~y~Tu n\'es pas membre de cette entreprise pour faire cette commande', 'CHAR_ESTATE_AGENT', 1)
         end
+    else
+        TriggerClientEvent('esx:showAdvancedNotification', _src, 'burgershot', '~r~Erreur' , '~y~Tu n\'es pas membre de cette entreprise pour faire cette commande', 'CHAR_ESTATE_AGENT', 1)
     end
 end)
 
 -- Coffre
 RegisterServerEvent('dpr_burgershotJob:prendreitems')
 AddEventHandler('dpr_burgershotJob:prendreitems', function(itemName, count)
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
+	local _src = source
+	local xPlayer = ESX.GetPlayerFromId(_src)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
 
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_burgershot', function(inventory)
@@ -93,14 +100,14 @@ AddEventHandler('dpr_burgershotJob:prendreitems', function(itemName, count)
 		if count > 0 and inventoryItem.count >= count then
 
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
-				TriggerClientEvent('esx:showNotification', _source, "quantité invalide")
+				TriggerClientEvent('esx:showNotification', _src, "quantité invalide")
 			else
 				inventory.removeItem(itemName, count)
 				xPlayer.addInventoryItem(itemName, count)
-				TriggerClientEvent('esx:showNotification', _source, 'Objet retiré', count, inventoryItem.label)
+				TriggerClientEvent('esx:showNotification', _src, 'Objet retiré', count, inventoryItem.label)
 			end
 		else
-			TriggerClientEvent('esx:showNotification', _source, "quantité invalide")
+			TriggerClientEvent('esx:showNotification', _src, "quantité invalide")
 		end
 	end)
 end)
@@ -108,7 +115,7 @@ end)
 
 RegisterNetEvent('dpr_burgershotJob:stockitem')
 AddEventHandler('dpr_burgershotJob:stockitem', function(itemName, count)
-	local _source = source
+	local _src = source
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local sourceItem = xPlayer.getInventoryItem(itemName)
 
@@ -119,9 +126,9 @@ AddEventHandler('dpr_burgershotJob:stockitem', function(itemName, count)
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
-			TriggerClientEvent('esx:showNotification', _source, "Objet déposé "..count..""..inventoryItem.label.."")
+			TriggerClientEvent('esx:showNotification', _src, "Objet déposé "..count..""..inventoryItem.label.."")
 		else
-			TriggerClientEvent('esx:showNotification', _source, "quantité invalide")
+			TriggerClientEvent('esx:showNotification', _src, "quantité invalide")
 		end
 	end)
 end)
@@ -143,8 +150,8 @@ end)
 -- Preparation
 RegisterNetEvent('dpr_Burgershot:Preparation')
 AddEventHandler('dpr_Burgershot:Preparation', function(Nom, ItemRequis, ItemCuisiner)
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
+    local _src = source
+    local xPlayer = ESX.GetPlayerFromId(_src)
 
     local ItemBesoin = xPlayer.getInventoryItem(ItemRequis).count
     local ItemDonner = xPlayer.getInventoryItem(ItemCuisiner).count
